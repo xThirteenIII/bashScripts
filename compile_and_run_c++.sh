@@ -10,11 +10,11 @@ read fileToCompile
 printf "\nType executable file name to generate: "
 read execFile
 
-printf "\nCompiling $fileToCompile ..."
+printf "\nCompiling $fileToCompile..."
 
-g++ -Wall -std=c++14 $fileToCompile $execFile
+g++ -Wall -std=c++14 $fileToCompile -o $execFile
 
-printf "\nRunning $execFile ..."
+printf "\nRunning $execFile...\n"
 
 ./$execFile
 
