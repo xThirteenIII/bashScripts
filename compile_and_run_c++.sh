@@ -19,9 +19,10 @@ clearScreen() {
 displayMenu() {
 	separator
 	printf "1 - ls files in current folder"
-	printf "\n2 - compile .cpp file(s)"
-	printf "\n3 - link -o file(s)"
-	printf "\n4 - run exec binary file"
+	printf "\n2 - compile a single .cpp file into obj file"
+	printf "\n3 - compile all .cpp files into exec binary file"
+	printf "\n4 - link all .o file(s)"
+	printf "\n5 - run exec binary file"
 	printf "\nq - quit"
 	separator
 }
@@ -35,6 +36,12 @@ compileGpp() {
 	separator
 	printf "Compiling $1\n"
 	g++ -Wall -std=c++14 -c $1 -o $2.o
+}
+
+compileAllGpp() {
+	separator
+	printf "Compiling all .cpp files in $PWD\n"
+	g++ -Wall -std=c++14 *.cpp -o $1
 }
 
 execFile() {
@@ -74,33 +81,48 @@ while :; do
 		clearScreen
 		printf "\nFiles in $PWD:"
 		ls
-		separator
 		displayMenu
 		read userChoice
 		;;
 	2)
 		clearScreen
-		printf "Type file(s) to compile: "
+		# TODO: check if file exists in folder
+		printf "Type file to compile: "
 		read fileToCompile
 		printf "\nType output file name: "
 		read outputFileName
 		compileGpp $fileToCompile $outputFileName
 		printf "\nCreated $outputFileName.o file"
-		separator
 		displayMenu
 		read userChoice
 		;;
 	3)
+		# TODO: fix behaviour if there's no .cpp files in folder
 		clearScreen
-		printf "linking"
+		printf "Type output file name for your executable: "
+		read execFileName
+		compileAllGpp $execFileName
+		printf "Created $execFileName executable"
 		displayMenu
 		read userChoice
 		;;
 	4)
+		# TODO: fix behaviour if there's no .o files in folder
 		clearScreen
-		printf "running"
+		printf "Type output file name for your executable: "
+		read execFileName
+		linkObjFiles $execFileName
+		printf "\nCreated $execFileName executable file"
+		printf "\nIf you can't exec the file, be sure it has x permissions"
 		displayMenu
 		read userChoice
+		;;
+	5)
+		# TODO: check if file exists in folder
+		clearScreen
+		printf "Type exec file to run: "
+		read execFileName
+		execFile $execFileName
 		exit
 		;;
 	"q")
