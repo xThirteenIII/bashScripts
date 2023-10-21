@@ -1,21 +1,66 @@
 #!/bin/bash
 #
 #
-printf "Files in current folder: "
-ls
+#
+#
+separator() {
+	printf "\n-----------------------\n"
+}
 
-printf "\nType file to compile: "
-read fileToCompile
+displayMenu() {
+	printf "c++ compile and run:\n"
+	printf "1 - ls files in current folder"
+	printf "\n2 - compile .cpp file(s)"
+	printf "\n3 - link -o file(s)"
+	printf "\n4 - run exec binary file\n"
+	separator
+}
 
-printf "\nType executable file name to generate: "
-read execFile
+# Need to show menu once, then if selection is invalid,
+# display message + new menu.
+displayMenu
+read userChoice
 
-printf "\nCompiling $fileToCompile..."
+# Additional "" quoting and separate sets of brackets used for
+# other shells portability.
+while [[ "$userChoice" -lt 1 ]] || [[ "$userChoice" -gt 4 ]]; do
+	printf "\nInvalid choice, please select one of the following:"
+	separator
+	displayMenu
+	read userChoice
+done
 
-g++ -Wall -std=c++14 $fileToCompile -o $execFile
+while :; do
+	case $userChoice in
 
-printf "\nRunning $execFile...\n"
+	1)
+		ls
+		;;
+	2)
+		printf "\nType file(s) to compile: "
+		read fileToCompile
+		;;
+	3)
+		printf "\nlinking"
+		;;
+	4)
+		printf "\nrunning"
+		;;
+	*)
+		printf "\ninvalid selection\n"
+		;;
+	esac
 
-./$execFile
+	[[ ($userChoice -lt 1 && $userChoice -gt 4) ]] || break
+done
 
+#printf "\nType executable file name to generate: "
+#read execFile
 
+#printf "\nCompiling $fileToCompile..."
+
+#g++ -Wall -std=c++14 $fileToCompile -o $execFile
+
+#printf "\nRunning $execFile...\n"
+
+#./$execFile
