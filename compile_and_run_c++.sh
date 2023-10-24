@@ -16,6 +16,7 @@ clearScreen() {
 	clear
 }
 
+# TODO: add -pthread flag for running files with <pthread.h>
 displayMenu() {
 	separator
 	printf "1 - ls files in current folder"
