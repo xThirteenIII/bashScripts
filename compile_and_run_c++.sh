@@ -3,6 +3,8 @@
 #
 #
 #
+#
+STD="c++20"
 
 printf "c++ compile and run:"
 
@@ -16,7 +18,15 @@ clearScreen() {
 	clear
 }
 
-# TODO: add -pthread flag for running files with <pthread.h>
+selectCppStd(){
+	separator
+    printf "Please select c++ standard to use:"
+	printf "\n1 - c++14"
+	printf "\n2 - c++17"
+	printf "\n3 - c++20"
+	separator
+}
+
 displayMenu() {
 	separator
 	printf "1 - ls files in current folder"
@@ -36,13 +46,13 @@ invalidChoiceMessage() {
 compileGpp() {
 	separator
 	printf "Compiling $1\n"
-	g++ -Wall -std=c++14 -c $1 -o $2.o
+	g++ -Wall -std=$STD -c $1 -o $2.o
 }
 
 compileAllGpp() {
 	separator
 	printf "Compiling all .cpp files in $PWD\n"
-	g++ -Wall -std=c++14 *.cpp -o $1
+	g++ -Wall -std=$STD *.cpp -o $1
 }
 
 execFile() {
@@ -61,14 +71,43 @@ linkObjFiles() {
 
 # Need to show menu once, then if selection is invalid,
 # display message + new menu.
+selectCppStd
+read userSelectStd
+
+while [[ "$userSelectStd" -lt 1 || "$userSelectStd" -gt 3 ]]; do
+	clearScreen
+	invalidChoiceMessage
+	selectCppStd
+    read userSelectStd
+done
+
+case $userSelectStd in
+
+    1)
+        STD="c++14" 
+        ;;
+    2)
+        STD="c++17" 
+        ;;
+    3)
+        STD="c++20"
+        ;;
+    *)
+        printf "Shouldn't be here\n"
+        selectCppStd
+        read userSelectStd
+    ;;
+esac
+
+
+
 displayMenu
 read userChoice
-
 # Additional "" quoting and separate sets of brackets used for
 # other shells portability.
 # I know it's ugly using a char instead of a number for quitting,
 # but q feels so good.
-while [[ "$userChoice" != "q" ]] && [[ "$userChoice" -lt 1 || "$userChoice" -gt 4 ]]; do
+while [[ "$userChoice" != "q" ]] && [[ "$userChoice" -lt 1 || "$userChoice" -gt 5 ]]; do
 	clearScreen
 	invalidChoiceMessage
 	displayMenu
@@ -137,7 +176,7 @@ while :; do
 		;;
 	esac
 
-	[[ "$userChoice" -gt 1 ]] || [[ "$userChoice" -lt 4 ]] || break
+	[[ "$userChoice" -gt 1 ]] || [[ "$userChoice" -lt 5 ]] || break
 done
 
 #printf "\nType executable file name to generate: "
